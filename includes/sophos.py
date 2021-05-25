@@ -28,7 +28,7 @@ class sophos():
             self.standardHeaders['X-Tenant-ID'] = selectedTenant['id']
             return True
         return False
-        
+
     def getData(self,api,request,params=[]):
         request = requests.get("{}/{}/v1/{}?{}".format(self.url,api,request,'&'.join(params)),headers=self.standardHeaders)
         if request.status_code != 200:
@@ -39,6 +39,13 @@ class sophos():
     def deleteData(self,api,request,params=[]):
         request = requests.delete("{}/{}/v1/{}?{}".format(self.url,api,request,'&'.join(params)),headers=self.standardHeaders)
         if request.status_code != 200:
+            return {"result":False,"data":request.json()}
+        else:
+            return {"result":True,"data":request.json()}
+
+    def postJson(self,api,request,json={}):
+        request = requests.post("{}/{}/v1/{}".format(self.url,api,request), json=json, headers=self.standardHeaders)
+        if request.status_code != 201:
             return {"result":False,"data":request.json()}
         else:
             return {"result":True,"data":request.json()}
@@ -83,7 +90,16 @@ class sophos():
         return endpoints
 
     def getEndpoint(self,endpointID):
-        return self.getData("endpoint","endpoints/{}".format(endpointID))        
+        return self.getData("endpoint","endpoints/{}".format(endpointID))
 
     def deleteEndpoint(self,endpointID):
         return self.deleteData("endpoint","endpoints/{}".format(endpointID))
+
+    def postScan(self, endpointID):
+        return self.postJson("endpoint", "endpoints/" + endpointID + "/scans", {})
+
+    def getTamperProtection(self, endpointID):
+        return self.getData("endpoint", "endpoints/" + endpointID + "/tamper-protection")
+
+    def postTamperProtection(self, endpointID, params={'enabled': True, 'regeneratePassword': True}):
+        return self.postJson("endpoint", "endpoints/" + endpointID + "/tamper-protection", params)
