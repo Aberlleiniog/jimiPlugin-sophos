@@ -1,7 +1,7 @@
 from core import plugin, model
 
 class _sophos(plugin._plugin):
-    version = 0.2
+    version = 0.3
 
     def install(self):
         # Register models
@@ -27,5 +27,9 @@ class _sophos(plugin._plugin):
     def upgrade(self,LatestPluginVersion):
         if self.version < 0.2:
             model.registerModel("sophosEndpoint","_sophosEndpoint","_action","plugins.sophos.models.action")
+        if self.version < 0.3:
+            model.registerModel("sophosScan", "_sophosScan", "_action", "plugins.sophos.models.action")
+            model.registerModel("sophosGetTamperProtection", "_sophosGetTamperProtection", "_action", "plugins.sophos.models.action")
+            model.registerModel("sophosSetTamperProtection", "_sophosSetTamperProtection", "_action", "plugins.sophos.models.action")
         return True
     

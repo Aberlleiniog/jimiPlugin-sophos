@@ -41,7 +41,6 @@ class _sophosScan(action._action):
 
     def run(self,data,persistentData,actionResult):
         endpointID = helpers.evalString(self.endpointID,{"data" : data})
-        ## if not endpoint lookup by UL?
         tenant = helpers.evalString(self.tenant,{"data" : data})
         if not self.client_secret_plain:
             self.client_secret_plain = auth.getPasswordFromENC(self.client_secret)
